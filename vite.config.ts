@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -17,11 +16,11 @@ export default defineConfig({
     },
   },
   server: {
-    // proxy: {
-    //   "/intelligent-web": {
-    //     target: "http://192.168.60.123:80",
-    //     changeOrigin: true,
-    //   },
-    // },
+    proxy: {
+      "/base": {
+        target: "http://127.0.0.1:8888",
+        changeOrigin: true,
+      },
+    },
   },
 });

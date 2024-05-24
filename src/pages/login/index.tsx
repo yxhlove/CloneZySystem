@@ -1,50 +1,31 @@
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import "./index.less";
-import { useEffect, useState } from "react";
-import api from "@/service";
-import { aesEncrypt, setLocalStorage, useAuth } from "@/utils";
+import api from "@/api";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hook";
+import { setIsLogin } from "@/store/userSlice";
+import { StorageUtil } from "@/utils/StorageUtil";
 
 const Login = () => {
-  const { setToken } = useAuth();
   const navigate = useNavigate();
-  const [captcha, setCaptcha] = useState<string>("");
-  const [temporaryId, setTemporaryId] = useState<string>("");
-  const [longTimeUpdate, setLongTimeUpdate] = useState<boolean>(false);
-  const [needCodeUpdate, setNeedCodeUpdate] = useState<boolean>(false);
-
-  useEffect(() => {
-    getVerifyCode();
-  }, []);
-
-  const getVerifyCode = async () => {
-    const [err, res] = await api.getVerifyCode();
-    if (!err && res) {
-      setCaptcha(res.data.lineCaptcha);
-      setTemporaryId(res.data.temporaryId);
-    }
-  };
+  const dispatch = useAppDispatch();
 
   const handleLogin = async (values: any) => {
-    const { nickName, password } = values;
+    const { nickname, password } = values;
     const [err, res] = await api.login({
-      nickName,
-      password: aesEncrypt(password),
-      temporaryId,
-      captcha,
+      nickname,
+      password,
     });
     if (!err && res) {
-      setLongTimeUpdate(res.data.longTimeUpdate);
-      setNeedCodeUpdate(res.data.needCodeUpdate);
-
-      setToken(res.data.token);
-      getUserInfo(res.data.uid);
+      StorageUtil.setToken(res.data.token);
+      dispatch(setIsLogin(true));
+      getUserInfo();
       navigate("/home", { replace: true });
     }
   };
 
-  const getUserInfo = async (uid: string) => {
-    const [err, res] = await api.getUserInfo(uid);
+  const getUserInfo = async () => {
+    const [err, res] = await api.getUserInfo();
     if (!err && res) {
     }
   };
@@ -59,19 +40,8 @@ const Login = () => {
             searchConfig: { submitText: "登录" },
           }}
         >
-          <ProFormText label="用户名" name="nickName" />
+          <ProFormText label="用户名" name="nickname" />
           <ProFormText.Password label="密码" name="password" />
-          <ProFormText
-            label="图片验证码"
-            name="imgVerifyCode"
-            addonAfter={
-              <img
-                height={40}
-                width={90}
-                src={"data:image/png;base64," + captcha}
-              />
-            }
-          />
         </ProForm>
       </div>
     </div>

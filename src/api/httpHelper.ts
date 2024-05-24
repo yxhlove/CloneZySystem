@@ -2,7 +2,7 @@ import { getLocalStorage } from "@/utils";
 import { message } from "antd";
 
 export const ResponseCode = {
-  success: "888888",
+  success: 200,
   failure: "000000",
   tokenExpired: "AAAAAA",
 };
@@ -35,7 +35,7 @@ export const handleAuthError = (code: string) => {
   return true;
 };
 
-export const handleGeneralError = (code: string, msg: string) => {
+export const handleGeneralError = (code: number, msg: string) => {
   if (code !== ResponseCode.success) {
     message.error(msg);
     return false;

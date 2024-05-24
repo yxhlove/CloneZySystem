@@ -1,5 +1,5 @@
 import { UserInfo } from "@/entity";
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initalValue: UserInfo = {
   name: "",
@@ -9,14 +9,18 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     userInfo: initalValue,
+    isLogin: false,
   },
   reducers: {
-    setUserInfo: (state, action) => {
+    setUserInfo: (state, action: PayloadAction<UserInfo>) => {
       state.userInfo = action.payload;
+    },
+    setIsLogin: (state, action: PayloadAction<boolean>) => {
+      state.isLogin = action.payload;
     },
   },
 });
 
-export const { setUserInfo } = userSlice.actions;
+export const { setUserInfo, setIsLogin } = userSlice.actions;
 
 export default userSlice.reducer;

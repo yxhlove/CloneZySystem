@@ -1,35 +1,6 @@
-import Login from "@/pages/login";
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
-import Home from "@/pages/home";
-import NotFound from "@/pages/404";
+import { useRoutes } from "react-router-dom";
+import { routes } from "./routes";
 
-const RouteWapper = () => {
-  // 公共路由
-  const publicRoutes = [
-    { path: "/login", element: <Login /> },
-    { path: "/*", element: <NotFound /> },
-  ];
-
-  // 受保护路由
-  const protectedRoutes = [
-    {
-      path: "/",
-      element: <ProtectedRoute />,
-      children: [
-        { path: "", element: <Navigate to="home" /> },
-        { path: "home", element: <Home /> },
-      ],
-    },
-  ];
-
-  const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
-
-  return <RouterProvider router={router} />;
+export const CustomRouter = () => {
+  return useRoutes(routes);
 };
-
-export default RouteWapper;

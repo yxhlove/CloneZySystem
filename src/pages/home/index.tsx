@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import api from "@/service";
+import api from "@/api";
 const Home = () => {
   return (
     <div>
